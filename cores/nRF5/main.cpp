@@ -40,7 +40,7 @@ static TaskHandle_t  _loopHandle;
 void initVariant() __attribute__((weak));
 void initVariant() { }
 
-uint32_t _loopStacksize = 512*3;
+uint32_t _loopStacksize = 512*4;
 
 uint32_t setLoopStacksize(void) __attribute__ ((weak));
 
@@ -101,6 +101,9 @@ int main( void )
 
   // Start FreeRTOS scheduler.
   vTaskStartScheduler();
+  
+  if ( !Serial.started() ) Serial.begin(115200);
+  Serial.printf("Should not be here.");
 
   NVIC_SystemReset();
 
