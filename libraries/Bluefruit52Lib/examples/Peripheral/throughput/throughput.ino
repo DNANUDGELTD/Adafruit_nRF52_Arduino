@@ -33,6 +33,8 @@ BLEUart bleuart;
 void setup(void)
 {
   Serial.begin(115200);
+  while ( !Serial ) delay(10);   // for nrf52840 with native usb
+
   Serial.println("Bluefruit52 Throughput Example");
   Serial.println("------------------------------\n");
 
@@ -93,6 +95,12 @@ void connect_callback(uint16_t conn_handle)
   Serial.println("Connected");
 }
 
+/**
+ * Callback invoked when a connection is dropped
+ * @param conn_handle connection where this event happens
+ * @param reason is a BLE_HCI_STATUS_CODE which can be found in ble_hci.h
+ * https://github.com/adafruit/Adafruit_nRF52_Arduino/blob/master/cores/nRF5/nordic/softdevice/s140_nrf52_6.1.1_API/include/ble_hci.h
+ */
 void disconnect_callback(uint16_t conn_handle, uint8_t reason)
 {
   (void) conn_handle;
@@ -124,9 +132,9 @@ void loop(void)
     Serial.println(" bytes ...");
 
     start = millis();
-    while (remaining > 0)
+    while ( (remaining > 0) && Bluefruit.connected() && bleuart.notifyEnabled() )
     {
-      bleuart.print(TEST_STRING);
+      if ( !bleuart.print(TEST_STRING) ) break;
 
       sent      += TEST_STRLEN;
       remaining -= TEST_STRLEN;
