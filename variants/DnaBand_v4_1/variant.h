@@ -22,8 +22,7 @@
 /** Master clock frequency */
 #define VARIANT_MCK       (64000000ul)
 
-// Uncomment USE_LFXO if not using platformIO build script
-// define USE_LFXO      // Board uses 32khz crystal for LF
+#define USE_LFXO      // Board uses 32khz crystal for LF
 // define USE_LFRC    // Board uses RC for LF
 
 /*----------------------------------------------------------------------------
