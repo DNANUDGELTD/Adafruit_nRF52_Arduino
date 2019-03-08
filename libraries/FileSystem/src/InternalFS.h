@@ -60,6 +60,7 @@ class LittleFS: public BluefruitFS::FileSystemClass
 
   protected:
     bool _begun;
+    bool _mounted;
 
     LittleFS (lfs_size_t read_size, lfs_size_t prog_size, lfs_size_t block_size, lfs_size_t block_count, lfs_size_t lookahead);
     

@@ -144,6 +144,7 @@ LittleFS::LittleFS (lfs_size_t read_size, lfs_size_t prog_size, lfs_size_t block
   _lfs_cfg.lookahead = lookahead;
 
   _begun = false;
+  _mounted = false;
 }
 
 LittleFS::~LittleFS ()
@@ -163,6 +164,8 @@ bool LittleFS::begin (void)
   {
     LOG_LV1("IFLASH", "Format internal file system");
     this->format(false);
+  } else {
+    _mounted = true;
   }
 
   return true;
@@ -173,9 +176,13 @@ bool LittleFS::format (bool eraseall)
   if ( eraseall ) {
     _flash_erase_all();
   }
-
+  if(_mounted) {
+    VERIFY_LFS(lfs_unmount(&_lfs), false);
+  }
   VERIFY_LFS(lfs_format(&_lfs, &_lfs_cfg), false);
   VERIFY_LFS(lfs_mount(&_lfs, &_lfs_cfg), false);
+
+  _mounted = true;
 
   return true;
 }
